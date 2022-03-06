@@ -142,7 +142,7 @@ const RegisterForm = () => {
                     size="sm"
                     onClick={() => handleHide(setHide, hide)}
                   >
-                    {hide ? <Icon as={ViewIcon} /> : <Icon as={ViewOffIcon} />}
+                    {hide ? <Icon as={ViewOffIcon} /> : <Icon as={ViewIcon} />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
@@ -177,7 +177,7 @@ const RegisterForm = () => {
                     size="sm"
                     onClick={() => handleHide(setHide2, hide2)}
                   >
-                    {hide2 ? <Icon as={ViewIcon} /> : <Icon as={ViewOffIcon} />}
+                    {hide2 ? <Icon as={ViewOffIcon} /> : <Icon as={ViewIcon} />}
                   </Button>
                 </InputRightElement>
               </InputGroup>

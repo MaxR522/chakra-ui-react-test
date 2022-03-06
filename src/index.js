@@ -5,6 +5,10 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
+import axios from 'axios';
+
+axios.defaults.baseURL = process.env.REACT_APP_BASE_SERVER_URL;
+console.log(process.env.REACT_APP_BASE_SERVER_URL);
 
 ReactDOM.render(
   <StrictMode>

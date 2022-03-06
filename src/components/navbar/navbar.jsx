@@ -81,7 +81,7 @@ export default function Navbar() {
               </>
             ) : (
               <Menu>
-                <MenuButton variant={'link'}>
+                <MenuButton variant={'link'} mr={3}>
                   <Avatar name={userData.firstName} src={userData.avatar} />
                 </MenuButton>
                 <MenuList>

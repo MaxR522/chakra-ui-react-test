@@ -39,14 +39,14 @@ const LoginForm = () => {
   // init mutation hook provided by react-query to handle api requests
   const mutation = useMutation(
     data => {
-      return axios.post('http://localhost:2222/api/auth/login', data);
+      return axios.post('/api/auth/login', data);
     },
     {
       // handle error
       onError: error => {
         toast({
           title: 'Error',
-          description: error.response?.data.message,
+          description: error.response?.data.message || error.message,
           status: 'error',
           duration: 9000,
           position: 'top',
@@ -125,7 +125,7 @@ const LoginForm = () => {
                     onClick={() => handleHide()}
                   >
                     {/* if button clicked, show, if re-clicked, hide. Default value: hide */}
-                    {hide ? <Icon as={ViewIcon} /> : <Icon as={ViewOffIcon} />}
+                    {hide ? <Icon as={ViewOffIcon} /> : <Icon as={ViewIcon} />}
                   </Button>
                 </InputRightElement>
               </InputGroup>
