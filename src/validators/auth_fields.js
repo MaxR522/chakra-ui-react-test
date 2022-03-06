@@ -32,7 +32,7 @@ const registerSchema = yup.object({
  *  Schema validation for fields of login form
  */
 const loginSchema = yup.object({
-  email: yup.string().required('Email is required'),
+  login: yup.string().required('Email or username is required'),
   password: yup.string().required('Password is required'),
 });
 

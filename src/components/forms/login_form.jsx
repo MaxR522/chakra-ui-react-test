@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-
+import axios from 'axios';
+import { useMutation } from 'react-query';
+import { useForm } from 'react-hook-form';
 import {
   Button,
   FormControl,
@@ -14,23 +16,62 @@ import {
   InputRightElement,
   Icon,
   FormErrorMessage,
+  useToast,
 } from '@chakra-ui/react';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
-
-import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { loginSchema } from '../../validators/auth_fields';
 
 const LoginForm = () => {
-  // init useForm hook
+  // init useForm hook to handle form state
   const {
     handleSubmit,
     register,
     formState: { errors },
   } = useForm({ resolver: yupResolver(loginSchema) });
 
-  // init useState hook
+  // init useState hook to handle show/hide password button
   const [hide, setHide] = useState(true);
+
+  // init toast hook provided by chakra-ui to display toast messages
+  const toast = useToast();
+
+  // init mutation hook provided by react-query to handle api requests
+  const mutation = useMutation(
+    data => {
+      return axios.post('http://localhost:2222/api/auth/login', data);
+    },
+    {
+      // handle error
+      onError: error => {
+        toast({
+          title: 'Error',
+          description: error.response?.data.message,
+          status: 'error',
+          duration: 9000,
+          position: 'top',
+          isClosable: true,
+        });
+      },
+      // handle success: save inside localStorage & redirect to home
+      onSuccess: data => {
+        localStorage.setItem('token', data.data.token);
+        localStorage.setItem('currentUser', JSON.stringify(data.data.data));
+        toast({
+          title: 'Login Success',
+          description: data.data.message,
+          status: 'success',
+          duration: 9000,
+          position: 'top',
+          isClosable: true,
+        });
+
+        setTimeout(() => {
+          window.location.href = '/';
+        }, 1000);
+      },
+    }
+  );
 
   /**
    * handle password hide or showing
@@ -41,10 +82,11 @@ const LoginForm = () => {
 
   /**
    * handle form submit
-   * @param {*} data {email, password}
+   * @param {*} data {login, password}
    */
-  const onSubmit = data => {
-    console.log(data);
+  const onSubmit = async data => {
+    // call mutation hook
+    mutation.mutate(data);
   };
 
   return (
@@ -52,14 +94,14 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex minH={'70vh'} align={'center'} justify={'center'}>
           <Box boxShadow={'lg'} rounded={'lg'} p={8}>
-            {/* Email form with Regex validation to check if valid email is provided */}
-            <FormControl isInvalid={errors && errors.email} isRequired>
-              <FormLabel htmlFor="email">Email</FormLabel>
-              <Input id="email" type="email" {...register('email')} />
+            {/* Email or username form field */}
+            <FormControl isInvalid={errors && errors.login} isRequired>
+              <FormLabel htmlFor="login">Email or Username</FormLabel>
+              <Input id="login" type="text" {...register('login')} />
 
-              {/* display email error message */}
+              {/* display login error message */}
               <FormErrorMessage>
-                {errors && errors.email && errors.email.message}
+                {errors && errors.login && errors.login.message}
               </FormErrorMessage>
             </FormControl>
 
@@ -103,9 +145,15 @@ const LoginForm = () => {
               >
                 forgot password ?
               </Link>
-              <Button mt={4} colorScheme="teal" type="submit">
-                Login
-              </Button>
+              {mutation.isLoading ? (
+                <Button isLoading mt={4} colorScheme="teal" type="submit">
+                  Login
+                </Button>
+              ) : (
+                <Button mt={4} colorScheme="teal" type="submit">
+                  Login
+                </Button>
+              )}
             </Stack>
 
             {/* Text with link that redirect to the register page */}

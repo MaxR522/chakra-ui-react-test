@@ -7,11 +7,21 @@ import {
   Button,
   useDisclosure,
   Stack,
+  Avatar,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from '@chakra-ui/react';
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import disconnectAccount from '../../utils/disconnectAccount';
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const currentUser = localStorage.getItem('currentUser');
+
+  const userData = currentUser ? JSON.parse(currentUser) : null;
 
   return (
     <>
@@ -45,27 +55,53 @@ export default function Navbar() {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
-            <Button
-              as={'a'}
-              size={'sm'}
-              fontWeight={400}
-              variant={'link'}
-              href={'/login'}
-              mr={4}
-            >
-              Sign In
-            </Button>
+            {!currentUser ? (
+              <>
+                <Button
+                  as={'a'}
+                  size={'sm'}
+                  fontWeight={400}
+                  variant={'link'}
+                  href={'/login'}
+                  mr={4}
+                >
+                  Sign In
+                </Button>
 
-            <Button
-              as={'a'}
-              variant={'solid'}
-              colorScheme={'teal'}
-              size={'sm'}
-              mr={4}
-              href={'/register'}
-            >
-              Register
-            </Button>
+                <Button
+                  as={'a'}
+                  variant={'solid'}
+                  colorScheme={'teal'}
+                  size={'sm'}
+                  mr={4}
+                  href={'/register'}
+                >
+                  Register
+                </Button>
+              </>
+            ) : (
+              <Menu>
+                <MenuButton variant={'link'}>
+                  <Avatar name={userData.firstName} src={userData.avatar} />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem>
+                    <Button as={'a'} variant={'link'} href={'#'}>
+                      Profile
+                    </Button>
+                  </MenuItem>
+                  <MenuItem>
+                    <Button
+                      as={'a'}
+                      variant={'link'}
+                      onClick={() => disconnectAccount()}
+                    >
+                      Disconnect
+                    </Button>
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
           </Flex>
         </Flex>
 
