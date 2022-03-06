@@ -9,6 +9,7 @@ import Navbar from './components/navbar/navbar';
 import ForgotPassword from './pages/forgot_password';
 import Confirmation from './pages/confirmation';
 import isUserConnected from './utils/isUserConnected';
+import NotFound from './pages/notFound';
 
 const queryClient = new QueryClient();
 
@@ -33,6 +34,7 @@ function App() {
               <Route path="/confirmation" element={<Confirmation />} />
             </>
           )}
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </ChakraProvider>
     </QueryClientProvider>
